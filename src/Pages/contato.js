@@ -10,6 +10,7 @@ const Contatos = () => {
     const [validator, setValidator] = useState(false);
     const [render, setRender] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [emailFormat, setEmailFormat] = useState(false);
 
     useEffect(async () => {
         const response = await fetch(url)
@@ -19,9 +20,15 @@ const Contatos = () => {
 
     const sendMessage = () => {
         setValidator(false);
+        setEmailFormat(false);
         if(author.length <= 0 || content.length <= 0){
             return setValidator(!validator)
         }
+
+        if (!(/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/).test(author)) {
+            return setEmailFormat(!emailFormat);
+        }
+
         const bodyForm = {
             email: author,
             message: content,
@@ -61,6 +68,13 @@ const Contatos = () => {
             {validator && 
                 <div className="alert alert-warning alert-dismissible fade show mt-2" role="alert">
                     <strong>Por favor preencha todos os campos!</strong>
+                    <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            {emailFormat && 
+                <div className="alert alert-warning alert-dismissible fade show mt-2" role="alert">
+                    <strong>Por favor preencha o campo de email com um email válido!</strong>
                     <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
